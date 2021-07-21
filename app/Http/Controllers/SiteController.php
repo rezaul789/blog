@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SignUpRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SiteController extends Controller
 {
@@ -14,7 +15,7 @@ class SiteController extends Controller
         return view('auth.signup');
     }
 
-    public function register(SignUpRequest $request){
+    public function register(Request $request){
 
 //        $request->validate([
 //            'first_name'=>'required|string|min:4|max:28',
@@ -28,7 +29,35 @@ class SiteController extends Controller
 //            'password.required' =>'Password  is must',
 //
 //        ]);
-//        dd($request->except('_token'));
+
+
+
+        $validator = Validator::make($request->all(),
+            [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required',
+                'password' => 'required',
+
+            ],
+            [
+                'first_name.required' => 'First Name is needed',
+                'last_name.required' => 'Last Name is needed',
+                'email.required' => 'Email is needed',
+                'password.required' => 'Password is needed',
+            ]
+        );
+        if ($validator->fails())
+        {
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
+
+
+
+
+
     }
+
 
 }
