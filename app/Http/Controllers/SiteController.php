@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SignUpRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class SiteController extends Controller
 {
@@ -52,7 +55,24 @@ class SiteController extends Controller
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
+//        $user=new User();
+//        $user->first_name=$request->first_name;
+//        $user->last_name=$request->last_name;
+//        $user->email=$request->email;
+//        $user->password=$request->password;
+//        $user->save();
 
+            User::create($request->except('_token'));
+
+//        User::create([
+//            'first_name'=>$request->first_name,
+//            'last_name'=>$request->last_name,
+//            'email'=>$request->email,
+//            'password'=>Hash::make($request->password)
+//        ]);
+
+
+        return redirect()->back();
 
 
 
