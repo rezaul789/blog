@@ -18,6 +18,9 @@
                           <div class="col-md-7 col-lg-8 pt-3 ">
 
                                 <x-errors/>
+                              @if(session('success'))
+                                  {{session('success')}}
+                              @endif
                               <form class="needs-validation " method="post" action="{{route('register')}}">
                                   @csrf
                                   <div class="row g-3  ">

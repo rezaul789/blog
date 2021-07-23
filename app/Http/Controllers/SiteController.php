@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Testing\Fluent\Concerns\Has;
+use Mockery\Exception;
 
 class SiteController extends Controller
 {
@@ -20,18 +21,7 @@ class SiteController extends Controller
 
     public function register(Request $request){
 
-//        $request->validate([
-//            'first_name'=>'required|string|min:4|max:28',
-//            'last_name'=>'required|string',
-//            'email'=>'required|email|',
-//            'password'=>'required||',
-//        ],[
-//            'first_name.required' =>'First Name  is must',
-//            'last_name.required' =>'Last Name  is required',
-//            'email.required' =>'Email  is must',
-//            'password.required' =>'Password  is must',
-//
-//        ]);
+
 
 
 
@@ -55,6 +45,34 @@ class SiteController extends Controller
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
+
+        try {
+            $request->validate([
+                'first_name'=>'required|string|min:4|max:28',
+                'last_name'=>'required|string',
+                'email'=>'required|email|',
+                'password'=>'required||',
+            ],[
+                'first_name.required' =>'First Name  is must',
+                'last_name.required' =>'Last Name  is required',
+                'email.required' =>'Email  is must',
+                'password.required' =>'Password  is must',
+
+            ]);
+
+            User::create([
+                'first_name'=>$request->first_name,
+                'last_name'=>$request->last_name,
+                'email'=>$request->email,
+                'password'=>Hash::make($request->password)
+            ]);
+            session()->flash('success', ' data saved successfully');
+        }
+        catch (Exception $e)
+        {
+            dd($e->getMessage());
+        }
+
 //        $user=new User();
 //        $user->first_name=$request->first_name;
 //        $user->last_name=$request->last_name;
@@ -62,14 +80,9 @@ class SiteController extends Controller
 //        $user->password=$request->password;
 //        $user->save();
 
-            User::create($request->except('_token'));
+//            User::create($request->except('_token'));
 
-//        User::create([
-//            'first_name'=>$request->first_name,
-//            'last_name'=>$request->last_name,
-//            'email'=>$request->email,
-//            'password'=>Hash::make($request->password)
-//        ]);
+
 
 
         return redirect()->back();
